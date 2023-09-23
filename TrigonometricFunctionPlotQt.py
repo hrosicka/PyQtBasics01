@@ -1,5 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QHBoxLayout, QLabel, QVBoxLayout, QFormLayout
+from PyQt5.QtGui import QFont
+from PyQt5 import QtCore
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -22,38 +24,38 @@ class MainWindow(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.setWindowTitle('My small app in Qt')
+        self.setWindowTitle('Plotting trigonometric functions in Qt')
 
         # create a layout
         layout = QFormLayout()
         self.setLayout(layout)
 
 
-        label = QLabel('Click the button to change me')
+        label = QLabel('Function name - please press the button')
+        label.setFont(QFont('Arial', 12))
         label.setStyleSheet("background-color : white; color : darkblue")
-        # Přidáním do layoutu se nápis automaticky stane potomkem hlavního okna
+        label.setAlignment(QtCore.Qt.AlignCenter)
+      
         layout.addWidget(label)
 
-        # Create the maptlotlib FigureCanvas object,
-        # which defines a single set of axes as self.axes.
-        sc = MplCanvas(self, width=5, height=4, dpi=100)
+        
+        sc = MplCanvas(self, width=6, height=5, dpi=100)
 
-        # self.plot_sin(sc)
-        sc.axes.plot([0,1,2,3,4], [10,1,20,3,40])
         layout.addWidget(sc)
 
-        # create buttons and add them to the layout
-        titles = ['Change', 'Plot', 'Exit']
+       
+        titles = ['Plot cos wave', 'Plot sin wave', 'Exit']
         buttons = [QPushButton(title) for title in titles]
         for button in buttons:
             layout.addWidget(button)
 
-        buttons[0].setToolTip("Press button change text!!!")
-        buttons[0].clicked.connect(lambda: self.change_text(label))
+        buttons[0].setToolTip("Press button for plot cos wave!!!")
         buttons[0].setStyleSheet("background-color : darkblue; color : white")
+        buttons[0].clicked.connect(lambda: self.plot_cos(sc, label))
 
+        buttons[1].setToolTip("Press button for plot sin wave!!!")
         buttons[1].setStyleSheet("background-color : darkblue; color : white")
-        buttons[1].clicked.connect(lambda: self.plot_sin(sc))
+        buttons[1].clicked.connect(lambda: self.plot_sin(sc, label))
 
         buttons[2].setToolTip("Press button for closing app!!!")
         buttons[2].setStyleSheet("background-color : darkblue; color : white")
@@ -66,16 +68,31 @@ class MainWindow(QWidget):
                            border: white solid 1px
                            }''')
         
-        # show the window
+      
         self.show()
 
-    def change_text(self, label):
-        label.setText('Hi, nice to meet you!!!')
-        label.setStyleSheet("background-color : white; color : red")
+    def change_text(self, label, gon):
+        if gon == "sin":
+            label.setText('SIN WAVE')
+        elif gon == "cos":
+            label.setText('COS WAVE')
+        label.setStyleSheet("background-color : lightgrey; color : darkblue")
 
-    def plot_sin(self, sin_plot):
-        sin_plot.axes.plot([0,1,2,3,4], [5,0,5,0,5])
+    def plot_sin(self, sin_plot, label):
+        sin_plot.axes.cla()
+        time = np.arange(0, 10, 0.1)
+        amplitude = np.sin(time)
+        sin_plot.axes.plot(time, amplitude)
         sin_plot.draw()
+        self.change_text(label, "sin")
+
+    def plot_cos(self, sin_plot, label):
+        sin_plot.axes.cla()
+        time = np.arange(0, 10, 0.1)
+        amplitude = np.cos(time)
+        sin_plot.axes.plot(time, amplitude)
+        sin_plot.draw()
+        self.change_text(label, "cos")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
