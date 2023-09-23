@@ -8,6 +8,7 @@ matplotlib.use('Qt5Agg')
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
+from matplotlib import pyplot as plt
 
 import numpy as np
 
@@ -83,15 +84,21 @@ class MainWindow(QWidget):
         time = np.arange(0, 10, 0.1)
         amplitude = np.sin(time)
         sin_plot.axes.plot(time, amplitude)
+        sin_plot.axes.set_title("Sin Wave")
+        sin_plot.axes.set_xlabel("Time")
+        sin_plot.axes.set_ylabel('Amplitude = sin(time)')
         sin_plot.draw()
         self.change_text(label, "sin")
 
-    def plot_cos(self, sin_plot, label):
-        sin_plot.axes.cla()
+    def plot_cos(self, cos_plot, label):
+        cos_plot.axes.cla()
         time = np.arange(0, 10, 0.1)
         amplitude = np.cos(time)
-        sin_plot.axes.plot(time, amplitude)
-        sin_plot.draw()
+        cos_plot.axes.plot(time, amplitude)
+        cos_plot.axes.set_title("Cosine Wave")
+        cos_plot.axes.set_xlabel("Time")
+        cos_plot.axes.set_ylabel('Amplitude = cos(time)')
+        cos_plot.draw()
         self.change_text(label, "cos")
 
 if __name__ == '__main__':
